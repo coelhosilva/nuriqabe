@@ -19,7 +19,7 @@ From a terminal within the `nurikabe-qlearning-user` project folder, create a ne
 
 Activate the virtual environment:
 
-4. Shell: `source venv/bin/activate` | Windows CMD: `venv\Scripts\activate`
+4. Bash/Zsh: `source venv/bin/activate` | Windows CMD: `venv\Scripts\activate`
 
 Install the nuriQabe package:
 
@@ -35,9 +35,9 @@ Alternatively, one may clone this repo and perform a local installation accordin
 
 3. ```python -m venv venv```
 
-4. Shell: `source venv/bin/activate` | Windows CMD: `venv\Scripts\activate`
+4. Bash/Zsh: `source venv/bin/activate` | Windows CMD: `venv\Scripts\activate`
 
-5. ```pip install ./nuriqabe```
+5. ```pip install .```
 
 ## Getting started
 
