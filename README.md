@@ -2,7 +2,6 @@
 
 `nuriQabe` is a Python package for solving Nurikabe puzzles with Q-Learning.
 
-
 ## Installation
 
 ### From this repo
@@ -41,7 +40,7 @@ Alternatively, one may clone this repo and perform a local installation accordin
 
 ## Getting started
 
-`nuriQabe` provides a Q-Learning-based solver for the board game Nurikabe. The package is divided into the following modules: `board_instances`, `game`, `geometry`, `graphics`, and `solvers`.
+`nuriQabe` provides a Q-Learning-based solver for the board game Nurikabe. The package is divided into the following modules: `board_instances`, with problem formulations and solutions; `game`, which implements the `NurikabeBoard` object along the game rules and deterministic strategies for progressing the game; `geometry`, with auxiliary functions for dealing with the grid, such as measuring distances; `graphics`, with plotting tools; and `solvers`, with the Q-Learning solver as well as a naive brute force alternative.
 
 The following code exemplifies how to instantiate a game and solve it using the Q-Learning solver. For seeing the board charts, opt for a ">Jupyter: Run Current File in Interactive Window" run configuration in vscode or a "Run File In Python Console" in PyCharm. For that, also make sure the venv has the `ipython` and `ipykernel` installed.
 
