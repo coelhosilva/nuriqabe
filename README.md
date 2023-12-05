@@ -25,7 +25,7 @@ Install the nuriQabe package:
 
 Alternatively, one may clone this repo and perform a local installation according to the following steps:
 
-1. ```git clone https://github.com/coelhosilva/nuriqabe.git``` (HTTP) or ```git clone git@github.com:coelhosilva/nuriqabe.git`` (SSH)
+1. ```git clone https://github.com/coelhosilva/nuriqabe.git``` (HTTP) or ```git clone git@github.com:coelhosilva/nuriqabe.git``` (SSH)
 
 2. ```cd nuriqabe```
 
