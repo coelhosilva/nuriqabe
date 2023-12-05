@@ -87,7 +87,8 @@ def find_paths_manhattan_distance(start: tuple[int, int], end: tuple[int, int]):
 
 
 def count_manhattan_distance_paths(
-    cell_0: tuple[int, int], cell_1: tuple[int, int]
+    cell_0: tuple[int, int],
+    cell_1: tuple[int, int],
 ) -> float:
     # Difference between the 'x'
     # coordinates of the given points
@@ -100,73 +101,3 @@ def count_manhattan_distance_paths(
     n = abs(y1 - y2)
 
     return binom(m + n, n)
-
-
-# # Example usage:
-# start_cell = (0, 0)
-# end_cell_1 = (0, 5)
-# end_cell_2 = (5, 5)
-
-# num_paths_1, path_1 = find_paths_manhattan_distance(start_cell, end_cell_1)
-# num_paths_2, path_2 = find_paths_manhattan_distance(start_cell, end_cell_2)
-
-# print(f"Number of paths from {start_cell} to {end_cell_1}: {num_paths_1}")
-# print(f"Path from {start_cell} to {end_cell_1}: {path_1}")
-
-# print(f"\nNumber of paths from {start_cell} to {end_cell_2}: {num_paths_2}")
-# print(f"Path from {start_cell} to {end_cell_2}: {path_2}")
-
-# def count_paths_manhattan_distance(start, end):
-#     x1, y1 = start
-#     x2, y2 = end
-
-#     # Calculate the Manhattan distance
-#     distance_x = abs(x2 - x1)
-#     distance_y = abs(y2 - y1)
-
-#     # Initialize a 2D array to store the number of paths
-#     paths = [[0] * (distance_y + 1) for _ in range(distance_x + 1)]
-
-#     # There is only one way to reach any cell in the first row or first column
-#     for i in range(distance_x + 1):
-#         paths[i][0] = 1
-
-#     for j in range(distance_y + 1):
-#         paths[0][j] = 1
-
-#     # Fill in the DP array
-#     for i in range(1, distance_x + 1):
-#         for j in range(1, distance_y + 1):
-#             paths[i][j] = paths[i - 1][j] + paths[i][j - 1]
-
-#     # The result is the number of paths to the bottom-right cell
-#     return paths[distance_x][distance_y]
-
-
-# # Example usage:
-# start_cell = (0, 0)
-# end_cell_1 = (0, 5)
-# end_cell_2 = (5, 5)
-
-# paths_1 = count_paths_manhattan_distance(start_cell, end_cell_1)
-# paths_2 = count_paths_manhattan_distance(start_cell, end_cell_2)
-
-# print(f"Number of paths from {start_cell} to {end_cell_1}: {paths_1}")
-# print(f"Number of paths from {start_cell} to {end_cell_2}: {paths_2}")
-
-
-# def binomialCoeff(n, k):
-#     res = 1
-
-#     # Since C(n, k) = C(n, n-k)
-#     if k > n - k:
-#         k = n - k
-
-#     # Calculate value of
-#     # [n * (n-1) *---* (n-k+1)] /
-#     # [k * (k-1) *---* 1]
-#     for i in range(k):
-#         res *= n - i
-#         res //= i + 1
-
-#     return res

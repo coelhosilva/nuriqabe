@@ -7,8 +7,8 @@ __all__ = [
 import itertools
 import numpy as np
 from copy import deepcopy
-from nurikabe.game import NurikabeBoard, CellCategory
-from nurikabe.solvers.brute_force import brute_force_solver_naive
+from nuriqabe.game import NurikabeBoard, CellCategory
+from nuriqabe.solvers.brute_force import brute_force_solver_naive
 
 
 def is_valid_move(
@@ -210,14 +210,26 @@ def solve_board_via_generated_islands(
                 for cell in island:
                     working_board.paint_cell(*cell, CellCategory.WHITE)
 
-            if working_board.search_space_size_naive_current() < brute_force_threshold:
-                bfs = brute_force_solver_naive(working_board)
-                if bfs is not None:
-                    return bfs, n_evaluated_island_combinations
-
+            painted_working_board = deepcopy(working_board)
+            # working_board_painted_grid = working_board.painted_grid.copy()
+            # working_board_cell_is_known = working_board.cell_is_known.copy()
             working_board.fill_unknown_cells(CellCategory.BLACK)
             if working_board.solved():
                 return working_board, n_evaluated_island_combinations
+            else:
+                working_board = painted_working_board
+                # working_board.painted_grid = working_board_painted_grid
+                # working_board.cell_is_known = working_board_cell_is_known
+                if (
+                    working_board.search_space_size_naive_current()
+                    < brute_force_threshold
+                ):
+                    bfs = brute_force_solver_naive(working_board)
+                    if bfs is not None:
+                        print(
+                            "[QLearningSolver/q_learning] Tried brute force and found solution. AFTER PAINT ALL BLACK."
+                        )
+                        return bfs, n_evaluated_island_combinations
 
             if n_evaluated_island_combinations > max_n_steps:
                 return None, n_evaluated_island_combinations

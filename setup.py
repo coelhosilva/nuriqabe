@@ -2,9 +2,11 @@ import setuptools
 import os
 import io
 
-NAME = "nurikabe"
+NAME = "nuriqabe"
 VERSION = "0.0.1a"
-DESCRIPTION = "nurikabe is a Python package for solving Nurikabe puzzles, including reinforcement learning based solvers."
+DESCRIPTION = (
+    "nuriQabe is a Python package for solving Nurikabe puzzles with Q-Learning."
+)
 EMAIL = "coelho@ita.br"
 AUTHOR = "Lucas Coelho e Silva"
 REQUIRES_PYTHON = ">=3.10.4"

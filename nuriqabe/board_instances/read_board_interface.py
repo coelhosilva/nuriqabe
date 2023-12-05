@@ -79,7 +79,7 @@ def boards_summary() -> pd.DataFrame:
     sizes = []
     square = []
     n_islands = []
-    for board_id, board, solution in fetch_all_boards_and_solutions():
+    for board_id, board, _ in fetch_all_boards_and_solutions():
         ids.append(board_id)
         shapes.append(board.shape)
         sizes.append(board.shape[0] * board.shape[1])

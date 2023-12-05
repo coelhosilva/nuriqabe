@@ -5,7 +5,7 @@ __all__ = [
 import itertools
 import numpy as np
 from copy import deepcopy
-from nurikabe.game import NurikabeBoard, CellCategory
+from nuriqabe.game import NurikabeBoard, CellCategory
 
 
 def brute_force_solver_naive(board: NurikabeBoard, max_n_steps: int = None):

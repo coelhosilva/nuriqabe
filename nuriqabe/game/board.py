@@ -5,8 +5,8 @@ __all__ = [
 import numpy as np
 from functools import reduce, cached_property
 from scipy.spatial import distance as scipy_distance
-from nurikabe.graphics import plot_grid
-from nurikabe.geometry import (
+from nuriqabe.graphics import plot_grid
+from nuriqabe.geometry import (
     direct_path_between_two_cells,
     is_continuous_path,
     count_manhattan_distance_paths,
