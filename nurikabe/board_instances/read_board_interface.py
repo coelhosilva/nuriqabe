@@ -3,9 +3,11 @@ __all__ = [
     "read_board_solution",
     "read_board",
     "fetch_all_boards_and_solutions",
+    "boards_summary",
 ]
 
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from typing import Literal
 
@@ -69,3 +71,27 @@ def fetch_all_boards_and_solutions(sort_boards: bool = True):
     for board in boards:
         board_id = int(board.stem[:4])
         yield board_id, *read_board(board_id)
+
+
+def boards_summary() -> pd.DataFrame:
+    ids = []
+    shapes = []
+    sizes = []
+    square = []
+    n_islands = []
+    for board_id, board, solution in fetch_all_boards_and_solutions():
+        ids.append(board_id)
+        shapes.append(board.shape)
+        sizes.append(board.shape[0] * board.shape[1])
+        square.append(board.shape[0] == board.shape[1])
+        n_islands.append(np.sum(board != 0))
+
+    return pd.DataFrame(
+        {
+            "id": ids,
+            "shape": shapes,
+            "size": sizes,
+            "square": square,
+            "n_islands": n_islands,
+        }
+    )
