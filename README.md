@@ -21,11 +21,11 @@ Activate the virtual environment:
 
 Install the nuriQabe package:
 
-5. ```pip install git+https://github.com/.git```
+5. ```pip install git+https://github.com/coelhosilva/nuriqabe.git```
 
 Alternatively, one may clone this repo and perform a local installation according to the following steps:
 
-1. ```git clone https://```
+1. ```git clone https://github.com/coelhosilva/nuriqabe.git``` (HTTP) or ```git clone git@github.com:coelhosilva/nuriqabe.git`` (SSH)
 
 2. ```cd nuriqabe```
 
