@@ -11,9 +11,6 @@ snippets/
 deploy_wheels/
 dont_commit/
 *dont_commit*
-*problem.txt
-*solution.txt
-*nurikabe_boards/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
