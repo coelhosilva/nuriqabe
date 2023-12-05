@@ -112,7 +112,7 @@ class NurikabeDeterministicRules:
                         self.paint_cell(*neighbor, CellCategory.BLACK)
 
     def merging_dark_areas(self):
-        # # merging dark areas. Must be recursive.
+        # ! merging dark areas. Could be recursive.
         # ! must be improved not to block an island expansion
         for ix, iy in np.ndindex(self.painted_grid.shape):
             if self.painted_grid[ix, iy] == CellCategory.BLACK.value:
@@ -195,8 +195,6 @@ class NurikabeDeterministicRules:
                         can_expand_directly = False
 
     def deterministic_fill_iterative(self):
-        # for deterministic_rule in self.deterministic_rules:
-        # deterministic_rule()
         for deterministic_rule in self.deterministic_rules:
             previous_grid = self.painted_grid.copy()
             previous_certainty = self.cell_is_known.copy()
@@ -218,7 +216,7 @@ class NurikabeBoard(NurikabeDeterministicRules):
     def __init__(
         self,
         grid: np.ndarray | list[list[int]],
-        max_n_steps_deterministic_iterations: int = 10,
+        max_n_steps_deterministic_iterations: int = 20,
     ):
         super(NurikabeBoard, self).__init__()
         self.grid = self._init_grid(grid)
@@ -237,6 +235,9 @@ class NurikabeBoard(NurikabeDeterministicRules):
 
         self.deterministic_fill_one_timer()
         self.evolve_deterministic_fills_iterative()
+
+    def __len__(self):
+        return len(self.grid)
 
     def evolve_deterministic_fills_iterative(self):
         step = 0
@@ -279,9 +280,6 @@ class NurikabeBoard(NurikabeDeterministicRules):
                 self.get_incomplete_islands_sizes(),
             ),
         )
-
-    def __len__(self):
-        return len(self.grid)
 
     def _init_grid(self, grid: np.ndarray | list[list[int]]):
         if isinstance(grid, list):
@@ -342,15 +340,6 @@ class NurikabeBoard(NurikabeDeterministicRules):
             self.cell_is_known = previous_certainty
             return False
 
-        # self.in_between_deterministic_fills()
-
-        # if self.solvable():
-        #     return True
-        # else:
-        #     self.painted_grid = previous_grid
-        #     self.cell_is_known = previous_certainty
-        #     return False
-
     def in_between_deterministic_fills(self):
         self.deterministic_fill_iterative()
 
@@ -358,7 +347,6 @@ class NurikabeBoard(NurikabeDeterministicRules):
     def shape(self) -> tuple[int]:
         return self.grid.shape
 
-    @property
     def board_state_as_int(self) -> int:
         return int(
             "".join(np.abs(self.painted_grid.flatten()).astype(str)),
@@ -595,21 +583,6 @@ class NurikabeBoard(NurikabeDeterministicRules):
 
         return islands
 
-    # def get_islands_with_size(self) -> dict[int, list]:
-    #     islands = {}
-    #     for hint_cell in self.hint_cells:
-    #         islands[self.grid[hint_cell]] = [hint_cell]
-    #         neighborhood = self.neighbors(*hint_cell)
-    #         for neighbor in neighborhood:
-    #             if (
-    #                 self.painted_grid[neighbor] == CellCategory.WHITE.value
-    #                 and neighbor not in islands[self.grid[hint_cell]]
-    #             ):
-    #                 islands[self.grid[hint_cell]].append(neighbor)
-    #                 neighborhood.extend(self.neighbors(*neighbor))  # list concat
-
-    #     return islands
-
     def get_islands_with_size_alternative(self) -> dict[int, list]:
         islands = {}
         for hint_cell in self.hint_cells:
@@ -723,41 +696,6 @@ class NurikabeBoard(NurikabeDeterministicRules):
         )
 
     def solvable(self) -> bool:
-        # remaining_cells = np.where(self.painted_grid == -1)
-        # if len(np.where(self.painted_grid.flatten() == -1)[0]) == 2:
-        #     color_combinations = list(
-        #         itertools.product(
-        #             [CellCategory.WHITE.value, CellCategory.BLACK.value],
-        #             [CellCategory.WHITE.value, CellCategory.BLACK.value],
-        #         )
-        #     )
-        #     for color_combination in color_combinations:
-        #         previous_grid = self.painted_grid.copy()
-        #         previous_certainty = self.cell_is_known.copy()
-        #         self.painted_grid[remaining_cells[0]] = color_combination[0]
-        #         self.cell_is_known[remaining_cells[0]] = True
-        #         self.painted_grid[remaining_cells[1]] = color_combination[1]
-        #         self.cell_is_known[remaining_cells[0]] = True
-        #         if self.solved():
-        #             return True
-        #         else:
-        #             self.painted_grid = previous_grid
-        #             self.cell_is_known = previous_certainty
-
-        # if len(np.where(self.painted_grid.flatten() == -1)[0]) == 1:
-        #     rem_cell = (remaining_cells[0][0], remaining_cells[1][0])
-        #     for color in [CellCategory.WHITE.value, CellCategory.BLACK.value]:
-        #         previous_grid = self.painted_grid.copy()
-        #         previous_certainty = self.cell_is_known.copy()
-        #         self.painted_grid[rem_cell] = color
-        #         self.cell_is_known[rem_cell] = True
-        #         if self.solved():
-        #             return True
-        #         else:
-        #             self.painted_grid = previous_grid
-        #             self.cell_is_known = previous_certainty
-        #     return False
-
         # ! islands solved or can be constructed
         archipelago = self.get_islands()
         for isle_number, isle in enumerate(archipelago):

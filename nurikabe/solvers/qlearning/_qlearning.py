@@ -1,5 +1,11 @@
-import numpy as np
+__all__ = [
+    "QLearningSolver",
+    "q_learning",
+    "solve_board_via_generated_islands",
+]
+
 import itertools
+import numpy as np
 from copy import deepcopy
 from nurikabe.game import NurikabeBoard, CellCategory
 from nurikabe.solvers.brute_force import brute_force_solver_naive
@@ -73,15 +79,19 @@ def q_learning(
     max_n_episodes: int = 10,
     max_n_steps: int = 100,
     seed: int = 0,
-) -> tuple[np.ndarray]:
+    verbose: bool = True,
+) -> tuple[np.ndarray, dict]:
     random_state = np.random.RandomState(seed)
     q_table = np.zeros((*board.shape, 4))
     environment_rows = board.shape[0]
     environment_columns = board.shape[1]
     original_board = deepcopy(board)
 
+    if verbose:
+        print("[QLearningSolver/q_learning] Starting training process...")
+
     if original_board.is_terminal_state():
-        return q_table, []
+        return q_table, {}
 
     previously_completed_islands = [
         island["hint"] for island in board.get_completed_islands_info()
@@ -94,23 +104,36 @@ def q_learning(
 
     for episode in range(max_n_episodes):
         board = deepcopy(original_board)
-        print(f"Training episode: {episode}...")
+
+        if verbose:
+            print(f"[QLearningSolver/q_learning] Training episode: {episode}...")
 
         row_index, column_index = get_starting_location_island(
             board, random_state
         )  # some island definition
-        print(
-            f"Starting island: {row_index}, {column_index}. Island size: {board.grid[row_index, column_index]}."
-        )
+        if verbose:
+            print(
+                f"[QLearningSolver/q_learning] Starting island: {row_index}, {column_index}. Island size: {board.grid[row_index, column_index]}."
+            )
 
         step = 0
         step_ix = 0
-        printing_instances = np.linspace(0, max_n_steps, 10)
+        printing_instances = np.linspace(
+            int(max_n_steps / 5), max_n_steps, 5, endpoint=True
+        )
 
         while not board.is_terminal_state():
-            if step > printing_instances[step_ix]:
-                print("." * int(printing_instances[step_ix] / max_n_steps * 100))
-                step_ix += 1
+            if verbose:
+                if step > printing_instances[step_ix]:
+                    print(
+                        "["
+                        + f"{'.' * int(printing_instances[step_ix] / max_n_steps * 30)}".ljust(
+                            30, " "
+                        )
+                        + "]"
+                    )
+                    # print(f"[{'.' * int(printing_instances[step_ix] / max_n_steps * 100)}]".ljust(20), end="\r")
+                    step_ix += 1
 
             if step > max_n_steps:
                 break
@@ -155,7 +178,8 @@ def q_learning(
                             completed_island["cells"]
                         )
 
-    print("Training completed!")
+    if verbose:
+        print("[QLearningSolver/q_learning] Training completed!\n")
 
     return q_table, generated_islands
 
@@ -164,14 +188,23 @@ def solve_board_via_generated_islands(
     board: NurikabeBoard,
     generated_islands,
     brute_force_threshold: int = 10000,
-):
+    max_n_steps: int = 10000,
+    verbose: bool = True,
+) -> tuple[NurikabeBoard | None, int]:
+    if verbose:
+        print(
+            "[QLearningSolver/q_learning] Evaluating generated islands combinations..."
+        )
+    n_evaluated_island_combinations = 0
     if board.solved():
-        return board
+        return board, n_evaluated_island_combinations
     else:
         if len(generated_islands) == 0:
-            return None
+            return None, n_evaluated_island_combinations
 
         for island_group in itertools.product(*list(generated_islands.values())):
+            n_evaluated_island_combinations += 1
+
             working_board = deepcopy(board)
             for island in island_group:
                 for cell in island:
@@ -180,8 +213,54 @@ def solve_board_via_generated_islands(
             if working_board.search_space_size_naive_current() < brute_force_threshold:
                 bfs = brute_force_solver_naive(working_board)
                 if bfs is not None:
-                    return bfs
+                    return bfs, n_evaluated_island_combinations
 
             working_board.fill_unknown_cells(CellCategory.BLACK)
             if working_board.solved():
-                return working_board
+                return working_board, n_evaluated_island_combinations
+
+            if n_evaluated_island_combinations > max_n_steps:
+                return None, n_evaluated_island_combinations
+
+        return None, n_evaluated_island_combinations
+
+
+class QLearningSolver:
+    solved_board: NurikabeBoard
+    _q_table: np.ndarray
+    _generated_islands: dict
+    _n_island_combinations_tested: int
+
+    def __init__(self, problem_grid: np.ndarray, verbose: bool = True):
+        self.board = NurikabeBoard(problem_grid)
+        self.solvable_board = deepcopy(self.board)
+        self.verbose = verbose
+
+    def solve(self, max_n_episodes: int, max_n_steps: int) -> NurikabeBoard:
+        q_table, generated_islands = q_learning(
+            self.solvable_board,
+            max_n_episodes=max_n_episodes,
+            max_n_steps=max_n_steps,
+            verbose=self.verbose,
+        )
+        self._q_table = q_table
+        self._generated_islands = generated_islands
+
+        solved_board, n_island_combinations_tested = solve_board_via_generated_islands(
+            self.solvable_board,
+            generated_islands,
+            verbose=self.verbose,
+        )
+        self.solved_board = solved_board
+        self._n_island_combinations_tested = n_island_combinations_tested
+        if self.solved_board:
+            print(
+                f"[QLearningSolver/q_learning] Found solution. Tested {n_island_combinations_tested} island combinations."
+            )
+
+    def plot_solution(self):
+        self.solved_board.plot()
+
+    @property
+    def found_solution(self):
+        return self.solved_board is not None
