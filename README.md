@@ -5,6 +5,8 @@
 
 ## Installation
 
+### From this repo
+
 Create a project folder and navigate to it:
 
 1. ```mkdir nurikabe-qlearning-user```
@@ -22,6 +24,8 @@ Activate the virtual environment:
 Install the nuriQabe package:
 
 5. ```pip install git+https://github.com/coelhosilva/nuriqabe.git```
+
+### From source
 
 Alternatively, one may clone this repo and perform a local installation according to the following steps:
 
